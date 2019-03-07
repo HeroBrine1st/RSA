@@ -5,6 +5,12 @@
 local RSA = {}
 local Long = require("metaint")
 
+local function dontLetTLWY()
+  if os.sleep then
+    return os.sleep(0)
+  end
+end
+
 local function fermaTest(p) --тест ферма над числом 8 раз 
   local results = {}
   local count = 0
@@ -15,6 +21,7 @@ local function fermaTest(p) --тест ферма над числом 8 раз
       table.insert(results, i:pow(p - 1, p) == Long(1))
       count = count + 1
     end
+    dontLetTLWY()
   until count > 8
   for i = 1, #results do
     if not results[i] then
@@ -82,6 +89,7 @@ function RSA.getkey(L) -- Создание ключей
       i = i + 1
       local d_proto = ((i*rsa_phi)+1)
       local d_2 = d_proto%rsa_e
+      dontLetTLWY()
       if d_2[1] == 0 and d_2[2] == nil then -- d_2 ~= 0
         rsa_d = d_proto/rsa_e
         --print(rsa_d)
