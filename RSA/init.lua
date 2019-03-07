@@ -26,7 +26,7 @@ do
       if self.private_key[1] then
         return RSA_basic.sign(number, self.private_key[1], self.private_key[2])
       else
-        return error("No private key")
+        return error("No private key", 2)
       end
     end,
     verify = function(self, num, signedNum)
@@ -39,7 +39,7 @@ do
       if self.private_key[1] then
         return RSA_basic.decrypt(cryptNum, self.private_key[1], self.private_key[2])
       else
-        return error("No private key")
+        return error("No private key", 2)
       end
     end
   }
@@ -62,7 +62,9 @@ do
         self.private_key = { }
         for i = 1, 2 do
           self.public_key[i] = Long(public_key[i])
-          self.private_key[i] = Long(private_key[i])
+          if private_key[i] then
+            self.private_key[i] = Long(private_key[i])
+          end
         end
       else
         local bitlen = type(filepath) == "number" and filepath or 8

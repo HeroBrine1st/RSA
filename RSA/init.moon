@@ -18,7 +18,8 @@ class RSA
             @private_key = {}
             for i = 1, 2 do
                 @public_key[i] = Long(public_key[i])
-                @private_key[i] = Long(private_key[i])
+                if private_key[i]
+                    @private_key[i] = Long(private_key[i])
         else
             bitlen = type(filepath) == "number" and filepath or 8
             private,public = RSA_basic.getkey(bitlen)
@@ -41,7 +42,7 @@ class RSA
         if @private_key[1] then
             return RSA_basic.sign(number,@private_key[1],@private_key[2])
         else
-            error("No private key")
+            error("No private key",2)
     verify: (num,signedNum) =>
         return RSA_basic.verify(signedNum,@public_key[1],@public_key[2]) == Long(num)
     encrypt: (num) =>
@@ -50,4 +51,4 @@ class RSA
         if @private_key[1] then
             return RSA_basic.decrypt(cryptNum,@private_key[1],@private_key[2])
         else
-            error("No private key")
+            error("No private key",2)
