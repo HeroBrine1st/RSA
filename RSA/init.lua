@@ -33,7 +33,7 @@ do
       return RSA_basic.verify(signedNum, self.public_key[1], self.public_key[2]) == Long(num)
     end,
     encrypt = function(self, num)
-      return reutrn(RSA_basic.encrypt(num, self.public_key[1], self.public_key[2]))
+      return RSA_basic.encrypt(num, self.public_key[1], self.public_key[2])
     end,
     decrypt = function(self, cryptNum)
       if self.private_key[1] then
@@ -46,7 +46,7 @@ do
   _base_0.__index = _base_0
   _class_0 = setmetatable({
     __init = function(self, filepath)
-      if typeof(filepath == "string") then
+      if typeof(filepath) == "string" then
         local f, r = io.open(filepath)
         if not f then
           error(r)
@@ -64,12 +64,11 @@ do
           self.public_key[i] = Long(public_key[i])
           self.private_key[i] = Long(private_key[i])
         end
-      elseif typeof(filepath == "number") then
-        local private, public = RSA_basic.getkey(filepath)
+      else
+        local bitlen = type(filepath) == "number" and filepath or 8
+        local private, public = RSA_basic.getkey(bitlen)
         self.public_key = public
         self.private_key = private
-      else
-        return error("No arguments")
       end
     end,
     __base = _base_0,

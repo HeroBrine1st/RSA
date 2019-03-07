@@ -4,29 +4,28 @@ serialization = require "serialization"
 typeof = type
 class RSA
     new: (filepath) =>
-        if typeof filepath == "string"
-            local f,r = io.open(filepath)
-            if not f
+        if typeof(filepath) == "string"
+            f,r = io.open(filepath)
+            if not f then
                 error(r)
-            local data, reason = f\read("*a")
-            if not data
+            data, reason = f\read("*a")
+            if not data then 
                 error(reason)
             data = assert(load("return " .. data))()
-            local public_key = data.public_key
-            local private_key = data.private_key or {}
+            public_key = data.public_key
+            private_key = data.private_key or {}
             @public_key = {}
             @private_key = {}
-            for i = 1, 2
+            for i = 1, 2 do
                 @public_key[i] = Long(public_key[i])
                 @private_key[i] = Long(private_key[i])
-        elseif typeof filepath == "number"
-            local private,public = RSA_basic.getkey(filepath)
+        else
+            bitlen = type(filepath) == "number" and filepath or 8
+            private,public = RSA_basic.getkey(bitlen)
             @public_key = public
             @private_key = private
-        else
-            error("No arguments")
     save: (filepath) =>
-        local file = {
+        file = {
             public_key:{},
             private_key:{},
         }
@@ -34,21 +33,21 @@ class RSA
             file.public_key[i] = tostring(@public_key[i])
             if @private_key[i]
                 file.private_key[i] = tostring(@private_key[i])
-        local file_data = serialization.serialize(file)
-        local f = io.open(filepath,"w")
+        file_data = serialization.serialize(file)
+        f = io.open(filepath,"w")
         f\write(file_data)
         f\close()
     sign: (number) =>
-        if @private_key[1]
+        if @private_key[1] then
             return RSA_basic.sign(number,@private_key[1],@private_key[2])
         else
             error("No private key")
     verify: (num,signedNum) =>
         return RSA_basic.verify(signedNum,@public_key[1],@public_key[2]) == Long(num)
     encrypt: (num) =>
-        reutrn RSA_basic.encrypt(num,@public_key[1],@public_key[2])
+        return RSA_basic.encrypt(num,@public_key[1],@public_key[2])
     decrypt: (cryptNum) =>
-        if @private_key[1]
+        if @private_key[1] then
             return RSA_basic.decrypt(cryptNum,@private_key[1],@private_key[2])
         else
             error("No private key")
