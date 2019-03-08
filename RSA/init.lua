@@ -1,7 +1,12 @@
 local RSA_basic = require("RSA/RSAB")
 local Long = require("metaint")
+local TextSupport = require("RSA/text_support")
 local serialization = require("serialization")
 local typeof = type
+local dontLetTLWY
+dontLetTLWY = function()
+  return os.sleep(0)
+end
 local RSA
 do
   local _class_0
@@ -41,6 +46,29 @@ do
       else
         return error("No private key", 2)
       end
+    end,
+    textEncrypt = function(self, text, salt)
+      salt = salt or ""
+      local blocks = TextSupport.textToBlocks(salt .. text)
+      local result = { }
+      for i = 1, blocks do
+        dontLetTLWY()
+        result[i] = RSA_Basic.encrypt(blocks[i], self.public_key[1], self.public_key[2])
+      end
+      return result
+    end,
+    textDecrypt = function(self, result, salt)
+      if not self.private_key[1] then
+        error("No private key", 2)
+      end
+      local saltLen = #salt
+      local blocks = { }
+      for i = 1, #result do
+        dontLetTLWY()
+        blocks[i] = RSA_basic.decrypt(result[i], self.private_key[i], self.public_key[i])
+      end
+      local text = TextSupport.blocksToText(blocks)
+      return text:sub(saltLen + 1)
     end
   }
   _base_0.__index = _base_0
@@ -78,7 +106,10 @@ do
           end
         end
       else
-        local bitlen = type(filepath) == "number" and filepath or 8
+        local bitlen = type(filepath) == "number" and filepath or 16
+        if bitLen < 16 then
+          local bitLen = 16
+        end
         local private, public = RSA_basic.getkey(bitlen)
         self.public_key = public
         self.private_key = private
