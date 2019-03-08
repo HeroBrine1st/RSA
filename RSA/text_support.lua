@@ -1,5 +1,5 @@
 local bit = require("bit32")
-
+local Long = require("metaint")
 local function StrToInt(str)
     local int = 0
     local byte
@@ -34,7 +34,7 @@ end
 local function textFromBlocks(blocks)
     local text = ""
     for i = 1, #blocks do
-        local text_block = IntToStr(blocks[i])
+        local text_block = IntToStr(tonumber(tostring(blocks[i])))
         text = text .. text_block
     end
     return text
@@ -42,7 +42,7 @@ end
 
 local function blocksMove(blocks,module)
     local function transformBlock(prev,current)
-        return (prev+current)%module
+        return Long(prev+current)%module
     end
     local result = {blocks[1]}
     for i = 2, #blocks do
@@ -53,7 +53,7 @@ end
 
 local function blocksReturn(blocks,module)
     local function transformBlock(prev,current)
-        local result = (current-prev)%module
+        local result = Long(current-prev)%module
         if result < 0 then result = module-result end
         return result
     end
@@ -73,4 +73,10 @@ return {
         local blocks2 = blocksReturn(blocks,module)
         return textFromBlocks(blocks2)
     end,
+    blocksReturn = blocksReturn,
+    blocksMove = blocksMove,
+    blocksFromText = blocksFromText,
+    textFromBlocks = textFromBlocks,
+    IntToStr = IntToStr,
+    StrToInt = StrToInt,
 }

@@ -49,15 +49,16 @@ do
     end,
     textEncrypt = function(self, text, salt)
       salt = salt or ""
-      local blocks = TextSupport.textToBlocks(salt .. text)
+      local blocks = TextSupport.textToBlocks(salt .. text, self.public_key[2])
       local result = { }
-      for i = 1, blocks do
+      for i = 1, #blocks do
         dontLetTLWY()
-        result[i] = RSA_Basic.encrypt(blocks[i], self.public_key[1], self.public_key[2])
+        result[i] = RSA_basic.encrypt(blocks[i], self.public_key[1], self.public_key[2])
       end
       return result
     end,
     textDecrypt = function(self, result, salt)
+      salt = salt or ""
       if not self.private_key[1] then
         error("No private key", 2)
       end
@@ -65,9 +66,9 @@ do
       local blocks = { }
       for i = 1, #result do
         dontLetTLWY()
-        blocks[i] = RSA_basic.decrypt(result[i], self.private_key[i], self.public_key[i])
+        blocks[i] = RSA_basic.decrypt(result[i], self.private_key[1], self.private_key[2])
       end
-      local text = TextSupport.blocksToText(blocks)
+      local text = TextSupport.blocksToText(blocks, self.public_key[2])
       return text:sub(saltLen + 1)
     end
   }
