@@ -76,14 +76,28 @@ class RSA
             dontLetTLWY()
             result[i] = RSA_basic.encrypt(blocks[i],@public_key[1],@public_key[2])
         return result
-    textDecrypt: (result,salt) =>
-        salt = salt or ""
+    textDecrypt: (result,saltLen) =>
         if not @private_key[1] then
             error("No private key",2)
-        saltLen = #salt
         blocks = {}
         for i = 1, #result do
             dontLetTLWY()
             blocks[i] = RSA_basic.decrypt(result[i],@private_key[1],@private_key[2])
         text = TextSupport.blocksToText(blocks,@public_key[2])
         return text\sub(saltLen+1)
+    textSign: (text) =>
+        if not @private_key[1] then
+            error("No private key",2)
+        blocks = TextSupport.textToBlocks(text,@public_key[2])
+        result = {}
+        for i = 1, #blocks do
+            dontLetTLWY()
+            result[i] = RSA_basic.sign(blocks[i],@private_key[1],@private_key[2])
+        return result
+    textVerify: (text,signedBlocks) =>
+        blocks = {}
+        for i = 1, #signedBlocks do
+            dontLetTLWY()
+            blocks[i] = RSA_basic.verify(signedBlocks[i],@public_key[1],@public_key[2])
+        signedText = TextSupport.blocksToText(blocks,@public_key[2])
+        return text == signedText

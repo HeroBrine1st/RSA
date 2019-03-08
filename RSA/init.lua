@@ -57,12 +57,10 @@ do
       end
       return result
     end,
-    textDecrypt = function(self, result, salt)
-      salt = salt or ""
+    textDecrypt = function(self, result, saltLen)
       if not self.private_key[1] then
         error("No private key", 2)
       end
-      local saltLen = #salt
       local blocks = { }
       for i = 1, #result do
         dontLetTLWY()
@@ -70,6 +68,27 @@ do
       end
       local text = TextSupport.blocksToText(blocks, self.public_key[2])
       return text:sub(saltLen + 1)
+    end,
+    textSign = function(self, text)
+      if not self.private_key[1] then
+        error("No private key", 2)
+      end
+      local blocks = TextSupport.textToBlocks(text, self.public_key[2])
+      local result = { }
+      for i = 1, #blocks do
+        dontLetTLWY()
+        result[i] = RSA_basic.sign(blocks[i], self.private_key[1], self.private_key[2])
+      end
+      return result
+    end,
+    textVerify = function(self, text, signedBlocks)
+      local blocks = { }
+      for i = 1, #signedBlocks do
+        dontLetTLWY()
+        blocks[i] = RSA_basic.verify(signedBlocks[i], self.public_key[1], self.public_key[2])
+      end
+      local signedText = TextSupport.blocksToText(blocks, self.public_key[2])
+      return text == signedText
     end
   }
   _base_0.__index = _base_0
