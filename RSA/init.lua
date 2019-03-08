@@ -66,6 +66,17 @@ do
             self.private_key[i] = Long(private_key[i])
           end
         end
+      elseif typeof(filepath) == "table" then
+        local public_key = filepath.public_key
+        local private_key = filepath.private_key or { }
+        self.public_key = { }
+        self.private_key = { }
+        for i = 1, 2 do
+          self.public_key[i] = Long(public_key[i])
+          if private_key[i] then
+            self.private_key[i] = Long(private_key[i])
+          end
+        end
       else
         local bitlen = type(filepath) == "number" and filepath or 8
         local private, public = RSA_basic.getkey(bitlen)

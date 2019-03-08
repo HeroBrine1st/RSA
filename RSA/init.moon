@@ -20,6 +20,15 @@ class RSA
                 @public_key[i] = Long(public_key[i])
                 if private_key[i]
                     @private_key[i] = Long(private_key[i])
+        elseif typeof(filepath) == "table" then
+            public_key = filepath.public_key
+            private_key = filepath.private_key or {}
+            @public_key = {}
+            @private_key = {}
+            for i = 1, 2 do
+                @public_key[i] = Long(public_key[i])
+                if private_key[i]
+                    @private_key[i] = Long(private_key[i])
         else
             bitlen = type(filepath) == "number" and filepath or 8
             private,public = RSA_basic.getkey(bitlen)
