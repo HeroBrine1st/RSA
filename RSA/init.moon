@@ -36,8 +36,8 @@ class RSA
                     @private_key[i] = Long(private_key[i])
         else
             bitlen = type(filepath) == "number" and filepath or 16
-            if bitLen < 16 then --только попробуй сменить - шифрование текста станет недоступно. Алгоритмически.
-                bitLen = 16
+            if bitlen < 16 then --только попробуй сменить - шифрование текста станет недоступно. Алгоритмически.
+                bitlen = 16
             private,public = RSA_basic.getkey(bitlen)
             @public_key = public
             @private_key = private
@@ -46,7 +46,7 @@ class RSA
             public_key:{},
             private_key:{},
         }
-        for i = 1,2 do 
+        for i = 1,2 do
             file.public_key[i] = tostring(@public_key[i])
             if @private_key[i]
                 file.private_key[i] = tostring(@private_key[i])

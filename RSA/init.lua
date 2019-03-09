@@ -127,8 +127,8 @@ do
         end
       else
         local bitlen = type(filepath) == "number" and filepath or 16
-        if bitLen < 16 then
-          local bitLen = 16
+        if bitlen < 16 then
+          local bitlen = 16
         end
         local private, public = RSA_basic.getkey(bitlen)
         self.public_key = public
