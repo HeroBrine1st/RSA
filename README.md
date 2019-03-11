@@ -1,5 +1,5 @@
 <h1>RSA</h1><br>
 <p align="center">
-  <p>Public key cryptosystem</p><br>
-  <p>Now on lua</p><br>
+  <b>Public key cryptosystem</b><br>
+  <b>Now on lua</b><br>
 </p>
