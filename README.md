@@ -1,6 +1,6 @@
 <h1>RSA</h1><br>
 <p align="center">
-  <b>Public key cryptosystem</b><br>
-  Public key cryptosystem
+  <b></b>
+  Public key cryptosystem<br>
   Now on lua<<br>
 </p>
