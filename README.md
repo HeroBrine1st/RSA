@@ -3,4 +3,7 @@
   Public key cryptosystem<br>
   Now on lua<br>
 </p>
-123
+# Installation
+If you use an OpenComputers (mod on Minecraft), run
+### pastebin run 1xudmTa7
+Select language, "RSA" and wait for installation.
