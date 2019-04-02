@@ -68,8 +68,13 @@ class RSA
             return RSA_basic.decrypt(cryptNum,@private_key[1],@private_key[2])
         else
             error("No private key",2)
-    textEncrypt: (text,salt) =>
-        salt = salt or ""
+    textEncrypt: (text,saltLen) =>
+        saltLen = saltLen or 4
+        if type(saltLen) == "string"
+            saltLen = #saltLen
+        salt = ""
+        for i = 1, saltLen do
+            salt = salt .. string.char(math.random(0,255))
         blocks = TextSupport.textToBlocks(salt..text,@public_key[2])
         result = {}
         for i = 1, #blocks do
@@ -77,6 +82,7 @@ class RSA
             result[i] = RSA_basic.encrypt(blocks[i],@public_key[1],@public_key[2])
         return result
     textDecrypt: (result,saltLen) =>
+        saltLen = saltLen or 4
         if not @private_key[1] then
             error("No private key",2)
         blocks = {}

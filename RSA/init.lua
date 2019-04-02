@@ -47,8 +47,15 @@ do
         return error("No private key", 2)
       end
     end,
-    textEncrypt = function(self, text, salt)
-      salt = salt or ""
+    textEncrypt = function(self, text, saltLen)
+      saltLen = saltLen or 4
+      if type(saltLen) == "string" then
+        saltLen = #saltLen
+      end
+      local salt = ""
+      for i = 1, saltLen do
+        salt = salt .. string.char(math.random(0, 255))
+      end
       local blocks = TextSupport.textToBlocks(salt .. text, self.public_key[2])
       local result = { }
       for i = 1, #blocks do
@@ -58,6 +65,7 @@ do
       return result
     end,
     textDecrypt = function(self, result, saltLen)
+      saltLen = saltLen or 4
       if not self.private_key[1] then
         error("No private key", 2)
       end
@@ -128,7 +136,7 @@ do
       else
         local bitlen = type(filepath) == "number" and filepath or 16
         if bitlen < 16 then
-          local bitlen = 16
+          bitlen = 16
         end
         local private, public = RSA_basic.getkey(bitlen)
         self.public_key = public

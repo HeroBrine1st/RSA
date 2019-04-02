@@ -88,51 +88,51 @@ m_table={ --Метатаблица для работы с метачислами
   __add=function(op1,op2)  --Сложение
     if getmetatable(op1)~=m_table then op1=metaint(op1) end
     if getmetatable(op2)~=m_table then op2=metaint(op2) end
-	local res={}
-	local c=0
-	for i=1,math.max(#op1,#op2) do
-	  res[i]=(op1[i] or 0)+(op2[i] or 0)+c
-	  if res[i]>=base then res[i]=res[i]-base c=1 else c=0 end
-	end
-	if c>0 then res[#res+1]=c end
-	setmetatable(res,m_table)
-	return res
+    local res={}
+    local c=0
+    for i=1,math.max(#op1,#op2) do
+      res[i]=(op1[i] or 0)+(op2[i] or 0)+c
+      if res[i]>=base then res[i]=res[i]-base c=1 else c=0 end
+    end
+    if c>0 then res[#res+1]=c end
+    setmetatable(res,m_table)
+    return res
   end,
 
   __sub=function(op1,op2)  --Вычитание
     if getmetatable(op1)~=m_table then op1=metaint(op1) end
     if getmetatable(op2)~=m_table then op2=metaint(op2) end
-	local res={}
-	local c=0
-	for i=1,#op1 do
-	  res[i]=op1[i]-(op2[i] or 0)-c
-	  if res[i]<0 then res[i]=res[i]+base c=1 else c=0 end
-	end
-	while res[#res]==0 and #res>1 do res[#res]=nil end
-	setmetatable(res,m_table)
-	return res
+    local res={}
+    local c=0
+    for i=1,#op1 do
+      res[i]=op1[i]-(op2[i] or 0)-c
+      if res[i]<0 then res[i]=res[i]+base c=1 else c=0 end
+    end
+    while res[#res]==0 and #res>1 do res[#res]=nil end
+    setmetatable(res,m_table)
+    return res
   end,
 
   __mul=function(op1,op2)  --Умножение
     if getmetatable(op1)~=m_table then op1=metaint(op1) end
     if getmetatable(op2)~=m_table then op2=metaint(op2) end
-	local res={}
-	local c,k
-	for i=1,#op1 do
-	  c=0
-	  for j=1,#op2 do
-	    k=i+j-1
-	    res[k]=(res[k] or 0)+op1[i]*op2[j]+c
-		if res[k]>=base then
-		  c=math.floor(res[k]/base)
-		  res[k]=res[k]-c*base
-		else c=0
-		end
-	  end
-	  if c>0 then res[k+1]=(res[k+1] or 0) + c end
-	end
-  while res[#res]==0 and #res>1 do res[#res]=nil end
-	setmetatable(res,m_table);
+    local res={}
+    local c,k
+    for i=1,#op1 do
+      c=0
+      for j=1,#op2 do
+        k=i+j-1
+        res[k]=(res[k] or 0)+op1[i]*op2[j]+c
+      if res[k]>=base then
+        c=math.floor(res[k]/base)
+        res[k]=res[k]-c*base
+      else c=0
+      end
+      end
+      if c>0 then res[k+1]=(res[k+1] or 0) + c end
+    end
+    while res[#res]==0 and #res>1 do res[#res]=nil end
+    setmetatable(res,m_table);
 	return res
   end,
 
@@ -150,39 +150,39 @@ m_table={ --Метатаблица для работы с метачислами
     if op2<0 then return metaint(0) end
     if op2==0 then return metaint(1) end
     if op2==1 then return metaint(op1) end
-	local res
-	if op2%2==0 then res=op1^(op2/2) return res*res end
-	res=op1^((op2-1)/2)
-	return res*res*op1
+    local res
+    if op2%2==0 then res=op1^(op2/2) return res*res end
+    res=op1^((op2-1)/2)
+    return res*res*op1
   end,
 
   __eq=function(op1,op2)  --  ==
     if getmetatable(op1)~=m_table then op1=metaint(op1) end
     if getmetatable(op2)~=m_table then op2=metaint(op2) end
-	for i=1,math.max(#op1,#op2) do
-	  if (op1[i] or 0)~=(op2[i] or 0) then return false end
-	end
-	return true
+    for i=1,math.max(#op1,#op2) do
+      if (op1[i] or 0)~=(op2[i] or 0) then return false end
+    end
+    return true
   end,
 
   __lt=function(op1,op2)  --  <
     if getmetatable(op1)~=m_table then op1=metaint(op1) end
     if getmetatable(op2)~=m_table then op2=metaint(op2) end
-	for i=math.max(#op1,#op2),1,-1 do
-	  if (op1[i] or 0)<(op2[i] or 0) then return true end
-	  if (op1[i] or 0)>(op2[i] or 0) then return false end
-	end
-	return false
+    for i=math.max(#op1,#op2),1,-1 do
+      if (op1[i] or 0)<(op2[i] or 0) then return true end
+      if (op1[i] or 0)>(op2[i] or 0) then return false end
+    end
+    return false
   end,
 
   __le=function(op1,op2)  --  <=
     if getmetatable(op1)~=m_table then op1=metaint(op1) end
     if getmetatable(op2)~=m_table then op2=metaint(op2) end
-	for i=math.max(#op1,#op2),1,-1 do
-	  if (op1[i] or 0)<(op2[i] or 0) then return true end
-	  if (op1[i] or 0)>(op2[i] or 0) then return false end
-	end
-	return true
+    for i=math.max(#op1,#op2),1,-1 do
+      if (op1[i] or 0)<(op2[i] or 0) then return true end
+      if (op1[i] or 0)>(op2[i] or 0) then return false end
+    end
+    return true
   end,
 
   __concat=function(op1, op2)
