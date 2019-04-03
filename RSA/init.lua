@@ -90,7 +90,7 @@ do
       if self.metadata then
         for i = 1, #result do
           dontLetTLWY()
-          blocks[i] = fast_EOV(result[i], self.private_key[1], self.metadata.P, self.metadata.Q)
+          blocks[i] = fast_EOV(result[i], self.private_key[1], self.metadata.P, self.metadata.Q, self.metadata.Dp, self.metadata.Dq, self.metadata.Qinv)
         end
       else
         for i = 1, #result do
@@ -110,6 +110,7 @@ do
       if self.metadata then
         for i = 1, #blocks do
           dontLetTLWY()
+          result[i] = fast_EOV(blocks[i], self.private_key[1], self.metadata.P, self.metadata.Q, self.metadata.Dp, self.metadata.Dq, self.metadata.Qinv)
         end
       else
         for i = 1, #blocks do
@@ -146,7 +147,7 @@ do
         local private_key = data.private_key or { }
         self.public_key = { }
         self.private_key = { }
-        self.metadata = filepath.metadata or { }
+        self.metadata = data.metadata or { }
         for i = 1, 2 do
           self.public_key[i] = Long(public_key[i])
           if private_key[i] then

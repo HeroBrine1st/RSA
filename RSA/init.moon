@@ -25,7 +25,7 @@ class RSA
             private_key = data.private_key or {}
             @public_key = {}
             @private_key = {}
-            @metadata = filepath.metadata or {}
+            @metadata = data.metadata or {}
             for i = 1, 2 do
                 @public_key[i] = Long(public_key[i])
                 if private_key[i]
@@ -110,7 +110,7 @@ class RSA
         if @metadata then
             for i = 1, #result do
                 dontLetTLWY()
-                blocks[i] = fast_EOV(result[i],@private_key[1],@metadata.P,@metadata.Q)
+                blocks[i] = fast_EOV(result[i],@private_key[1],@metadata.P,@metadata.Q,@metadata.Dp,@metadata.Dq,@metadata.Qinv)
         else
             for i = 1, #result do
                 dontLetTLWY()
@@ -125,7 +125,7 @@ class RSA
         if @metadata then
             for i = 1, #blocks do
                 dontLetTLWY()
-
+                result[i] = fast_EOV(blocks[i],@private_key[1],@metadata.P,@metadata.Q,@metadata.Dp,@metadata.Dq,@metadata.Qinv)
         else
             for i = 1, #blocks do
                 dontLetTLWY()
