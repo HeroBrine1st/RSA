@@ -16,15 +16,17 @@ return function(n, k)
   for i = 1, k do
     local _continue_0 = false
     repeat
+      dontLetTLWY()
       local a = n * math.floor(math.random() * 10 ^ 14)
       table.remove(a, 1)
-      local _ = table.remove(a, 1) -- division by 10^14
+      table.remove(a, 1)
       local x = a:pow(t, n)
       if x == longOne or x == n - 1 then
         _continue_0 = true
         break
       end
       for i = 1, s - 1 do
+        dontLetTLWY()
         x = x:pow(2, n)
         if x == 1 then
           return false, 1

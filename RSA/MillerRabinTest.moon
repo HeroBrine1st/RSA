@@ -13,6 +13,7 @@ longOne = Long(1)
         t /= 2
         s += 1
     for i = 1, k
+        dontLetTLWY()
         a = n*math.floor(math.random()*10^14)
         table.remove(a,1)
         table.remove(a,1) -- division by 10^14
@@ -20,6 +21,7 @@ longOne = Long(1)
         if x == longOne or x == n - 1 then
             continue
         for i = 1, s-1
+            dontLetTLWY()
             x = x\pow(2,n)
             if x == 1
                 return false, 1

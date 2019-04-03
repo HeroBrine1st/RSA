@@ -1,7 +1,6 @@
 local Long = require("metaint")
 local MillerRabinTest = require("RSA/MillerRabinTest")
 
-
 local function mulNum(op1,op2) -- костыль // применяем правила умножения для обработки целых чисел поверх натуральных
 	local inv1 = op1.inv
 	local inv2 = op2.inv
@@ -46,6 +45,7 @@ local function extendedEuclideanAlgorithm(a,b)
 	local x, xx, y, yy = longOne,longZero,longZero,longOne
 	local q
 	while b > 0 do
+		dontLetTLWY()
 		q = a/b --metaint поддерживает только целочисленное деление
 		a,b = b, a%b
 		x, xx = xx, subNum(x,mulNum(xx,q))
@@ -84,11 +84,12 @@ end
 
 local function binToDec(bin) -- преобразование из двоичной системы в десятеричную
   local dec = Long(0)
-  for i = 1, #bin do
+	for i = 1, #bin do
+		dontLetTLWY()
     local bit = tonumber(bin:sub(i,i))
     local pos = #bin - i
     if bit > 0 then
-      dec = dec + (longTwo^pos)*bit
+			dec = dec + (longTwo^pos)*bit
     end
   end
   return dec
@@ -107,7 +108,8 @@ local function Prime(L,debug) -- поиск простого числа сред
   local prime
   repeat
     prime = RandomNum(L)
-    --local result,count = fermaTest(prime)
+		--local result,count = fermaTest(prime)
+		dontLetTLWY()
     local result, chance = MillerRabinTest(prime,L)
     local accuracy = chance
     if result then accuracy = 1-accuracy end
