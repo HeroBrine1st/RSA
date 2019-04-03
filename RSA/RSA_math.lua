@@ -118,7 +118,21 @@ local function Prime(L,debug) -- поиск простого числа сред
   return prime
 end
 
+local function fastEncodeOrVerify(C,d,p,q,dp,dq,qinv)
+	C = Long(C)
+	if not qinv then
+		dp = d%(p-1)
+		dq = d%(q-1)
+		qinv = modular_inversion(q,p)
+	end
+	local m1 = C:pow(dp,p)
+	local m2 = C:pow(dq,q)
+	local h = ((m1-m2) * qinv)%p
+	return m2 + h*q
+end
+
 return {
 	modular_inversion = modular_inversion,
 	generate_prime = Prime,
+	fast_EOV = fastEncodeOrVerify,
 }
