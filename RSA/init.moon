@@ -137,4 +137,4 @@ class RSA
             dontLetTLWY()
             blocks[i] = RSA_basic.verify(signedBlocks[i],@public_key[1],@public_key[2])
         signedText = TextSupport.blocksToText(blocks,@public_key[2])
-        return text == signedText
+        return text == signedText,signedText

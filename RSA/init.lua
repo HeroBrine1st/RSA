@@ -127,7 +127,7 @@ do
         blocks[i] = RSA_basic.verify(signedBlocks[i], self.public_key[1], self.public_key[2])
       end
       local signedText = TextSupport.blocksToText(blocks, self.public_key[2])
-      return text == signedText
+      return text == signedText, signedText
     end
   }
   _base_0.__index = _base_0
