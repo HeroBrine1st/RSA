@@ -1,13 +1,12 @@
 local Long = require("metaint")
 local longOne = Long(1)
-return function(n, L)
+return function(n, k)
   if n == 2 or n == 3 then
-    return true, 1
+    return true, 0
   end
   if n < 2 or n % 2 == 0 then
     return false, 1
   end
-  local k = L
   local t = n - 1
   local s = 0
   while t % 2 == 0 do
@@ -17,7 +16,9 @@ return function(n, L)
   for i = 1, k do
     local _continue_0 = false
     repeat
-      local a = n * (math.random() * 10 ^ 14) / 10 ^ 14
+      local a = n * math.floor(math.random() * 10 ^ 14)
+      table.remove(a, 1)
+      local _ = table.remove(a, 1) -- division by 10^14
       local x = a:pow(t, n)
       if x == longOne or x == n - 1 then
         _continue_0 = true
