@@ -38,17 +38,15 @@ do
     end,
     sign = function(self, number)
       if self.private_key[1] then
-        if self.metadata then
-          return fast_EOS(number, self.private_key[1], self.metadata.P, self.metadata.Q, self.metadata.Dp, self.metadata.Dq, self.metadata.Qinv)
-        else
-          return RSA_basic.decrypt(number, self.private_key[1], self.private_key[2])
-        end
+        return RSA_basic.sign(number, self.private_key[1], self.private_key[2])
       else
         return error("No private key", 2)
       end
     end,
     verify = function(self, num, signedNum)
-      return RSA_basic.verify(signedNum, self.public_key[1], self.public_key[2]) == Long(num)
+      local unsignedNum = RSA_basic.verify(signedNum, self.public_key[1], self.public_key[2])
+      local testNum = Long(num)
+      return unsignedNum == testNum, unsignedNum
     end,
     encrypt = function(self, num)
       return RSA_basic.encrypt(num, self.public_key[1], self.public_key[2])
@@ -107,16 +105,9 @@ do
       end
       local blocks = TextSupport.textToBlocks(text, self.public_key[2])
       local result = { }
-      if self.metadata then
-        for i = 1, #blocks do
-          dontLetTLWY()
-          result[i] = fast_EOS(blocks[i], self.private_key[1], self.metadata.P, self.metadata.Q, self.metadata.Dp, self.metadata.Dq, self.metadata.Qinv)
-        end
-      else
-        for i = 1, #blocks do
-          dontLetTLWY()
-          result[i] = RSA_basic.sign(blocks[i], self.private_key[1], self.private_key[2])
-        end
+      for i = 1, #blocks do
+        dontLetTLWY()
+        result[i] = RSA_basic.sign(blocks[i], self.private_key[1], self.private_key[2])
       end
       return result
     end,
@@ -126,7 +117,7 @@ do
         dontLetTLWY()
         blocks[i] = RSA_basic.verify(signedBlocks[i], self.public_key[1], self.public_key[2])
       end
-      local signedText = TextSupport.blocksToText(blocks, self.public_key[2])
+      local signedText = TextSupport.blocksToText(blocks, self.public_key[2]):match("(%Z*)")
       return text == signedText, signedText
     end
   }

@@ -71,14 +71,16 @@ class RSA
         f\close()
     sign: (number) =>
         if @private_key[1] then
-            if @metadata then
-                return fast_EOS(number,@private_key[1],@metadata.P,@metadata.Q,@metadata.Dp,@metadata.Dq,@metadata.Qinv)
-            else
-                return RSA_basic.decrypt(number,@private_key[1],@private_key[2])
+            -- if @metadata then
+            --     return fast_EOS(number,@private_key[1],@metadata.P,@metadata.Q,@metadata.Dp,@metadata.Dq,@metadata.Qinv)
+            -- else
+            return RSA_basic.sign(number,@private_key[1],@private_key[2])
         else
             error("No private key",2)
     verify: (num,signedNum) =>
-        return RSA_basic.verify(signedNum,@public_key[1],@public_key[2]) == Long(num)
+        unsignedNum = RSA_basic.verify(signedNum,@public_key[1],@public_key[2])
+        testNum = Long(num)
+        return unsignedNum == testNum, unsignedNum
     encrypt: (num) =>
         return RSA_basic.encrypt(num,@public_key[1],@public_key[2])
     decrypt: (cryptNum) =>
@@ -122,19 +124,19 @@ class RSA
             error("No private key",2)
         blocks = TextSupport.textToBlocks(text,@public_key[2])
         result = {}
-        if @metadata then
-            for i = 1, #blocks do
-                dontLetTLWY()
-                result[i] = fast_EOS(blocks[i],@private_key[1],@metadata.P,@metadata.Q,@metadata.Dp,@metadata.Dq,@metadata.Qinv)
-        else
-            for i = 1, #blocks do
-                dontLetTLWY()
-                result[i] = RSA_basic.sign(blocks[i],@private_key[1],@private_key[2])
+        -- if @metadata then
+        --     for i = 1, #blocks do
+        --         dontLetTLWY()
+        --         result[i] = fast_EOS(blocks[i],@private_key[1],@metadata.P,@metadata.Q,@metadata.Dp,@metadata.Dq,@metadata.Qinv)
+        -- else
+        for i = 1, #blocks do
+            dontLetTLWY()
+            result[i] = RSA_basic.sign(blocks[i],@private_key[1],@private_key[2])
         return result
     textVerify: (text,signedBlocks) =>
         blocks = {}
         for i = 1, #signedBlocks do
             dontLetTLWY()
             blocks[i] = RSA_basic.verify(signedBlocks[i],@public_key[1],@public_key[2])
-        signedText = TextSupport.blocksToText(blocks,@public_key[2])
+        signedText = TextSupport.blocksToText(blocks,@public_key[2])\match("(%Z*)")
         return text == signedText,signedText
