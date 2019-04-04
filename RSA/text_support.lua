@@ -4,7 +4,7 @@ local function StrToInt(str)
     local int = 0
     local byte
     while #str < 4 do
-        str = str .. "\0"
+        str = str .. "\1"
     end
     for i = 0, 3 do
         byte=str:sub(1,1)
@@ -22,6 +22,7 @@ local function IntToStr(int)
         int=bit.lshift(int,8)
         str=str..string.char(char)
     end
+    str=str:gsub("\1","")
     return str
 end
 
