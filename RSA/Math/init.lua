@@ -37,6 +37,12 @@ local function subNum(op1,op2) -- костыль // применяем прав�
 	end
 end
 
+local function addNum(op1,op2) --костыль // применяем a + b = a - (-b) для обработки целых чисел поверх натуральных
+	local op2b = Long(op2)
+	op2b.inv = not op2.inv
+	return subNum(op1,op2b)
+end
+
 local longOne = Long(1)
 local longZero = Long(0)
 local longTwo = Long(2)
@@ -105,7 +111,7 @@ local function fastEncodeOrSign(C,d,p,q,dp,dq,qinv)
 	end
 	local m1 = C:pow(dp,p)
 	local m2 = C:pow(dq,q)
-	local h = ((m1-m2) * qinv)%p
+	local h = (mulNum(subNum(m1,m2),qinv))%p
 	return m2 + h*q
 end
 
