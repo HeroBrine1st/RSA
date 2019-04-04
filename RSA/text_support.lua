@@ -3,6 +3,9 @@ local Long = require("metaint")
 local function StrToInt(str)
     local int = 0
     local byte
+    while #str < 4 do
+        str = str .. "\0"
+    end
     for i = 0, 3 do
         byte=str:sub(1,1)
         str=str:sub(2)
