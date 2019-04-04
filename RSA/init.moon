@@ -1,9 +1,9 @@
-RSA_basic = require "RSA/RSAB"
+RSA_basic = require "RSA/Basic"
 Long = require "metaint"
 TextSupport = require "RSA/text_support"
-RSA_math = require "RSA/RSA_math"
+RSA_math = require "RSA/Math"
 
-import fast_EOV from RSA_math
+import fast_EOS from RSA_math
 
 serialization = require "serialization"
 typeof = type
@@ -72,7 +72,7 @@ class RSA
     sign: (number) =>
         if @private_key[1] then
             if @metadata then
-                return fast_EOV(number,@private_key[1],@metadata.P,@metadata.Q,@metadata.Dp,@metadata.Dq,@metadata.Qinv)
+                return fast_EOS(number,@private_key[1],@metadata.P,@metadata.Q,@metadata.Dp,@metadata.Dq,@metadata.Qinv)
             else
                 return RSA_basic.decrypt(number,@private_key[1],@private_key[2])
         else
@@ -84,7 +84,7 @@ class RSA
     decrypt: (cryptNum) =>
         if @private_key[1] then
             if @metadata then
-                return fast_EOV(cryptNum,@private_key[1],@metadata.P,@metadata.Q,@metadata.Dp,@metadata.Dq,@metadata.Qinv)
+                return fast_EOS(cryptNum,@private_key[1],@metadata.P,@metadata.Q,@metadata.Dp,@metadata.Dq,@metadata.Qinv)
             else
                 return RSA_basic.decrypt(cryptNum,@private_key[1],@private_key[2])
         else
@@ -110,7 +110,7 @@ class RSA
         if @metadata then
             for i = 1, #result do
                 dontLetTLWY()
-                blocks[i] = fast_EOV(result[i],@private_key[1],@metadata.P,@metadata.Q,@metadata.Dp,@metadata.Dq,@metadata.Qinv)
+                blocks[i] = fast_EOS(result[i],@private_key[1],@metadata.P,@metadata.Q,@metadata.Dp,@metadata.Dq,@metadata.Qinv)
         else
             for i = 1, #result do
                 dontLetTLWY()
@@ -125,7 +125,7 @@ class RSA
         if @metadata then
             for i = 1, #blocks do
                 dontLetTLWY()
-                result[i] = fast_EOV(blocks[i],@private_key[1],@metadata.P,@metadata.Q,@metadata.Dp,@metadata.Dq,@metadata.Qinv)
+                result[i] = fast_EOS(blocks[i],@private_key[1],@metadata.P,@metadata.Q,@metadata.Dp,@metadata.Dq,@metadata.Qinv)
         else
             for i = 1, #blocks do
                 dontLetTLWY()

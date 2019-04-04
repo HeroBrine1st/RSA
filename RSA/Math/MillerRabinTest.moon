@@ -1,5 +1,4 @@
 Long = require("metaint")
-
 longOne = Long(1)
 
 (n,k) ->
@@ -14,16 +13,18 @@ longOne = Long(1)
         s += 1
     for i = 1, k
         dontLetTLWY()
+        -- бенчмарк из 50ти тестов на числе 999983 (BitLen=20) показал, что так быстрее. Разница - 10 секунд
         a = n*math.floor(math.random()*10^14)
         table.remove(a,1)
         table.remove(a,1) -- division by 10^14
+        -- a = RandomNum(k/2)
         x = a\pow(t,n)
         if x == longOne or x == n - 1 then
             continue
         for i = 1, s-1
             dontLetTLWY()
             x = x\pow(2,n)
-            if x == 1
+            if x == longOne
                 return false, 1
             if x == n - 1
                 break

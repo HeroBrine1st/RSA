@@ -1,6 +1,6 @@
 local Long = require("metaint")
-local MillerRabinTest = require("RSA/MillerRabinTest")
-
+local MillerRabinTest = require("RSA/Math/MillerRabinTest")
+local RandomNum = require("RSA/Math/RandomNum")
 local function mulNum(op1,op2) -- костыль // применяем правила умножения для обработки целых чисел поверх натуральных
 	local inv1 = op1.inv
 	local inv2 = op2.inv
@@ -65,44 +65,20 @@ local function modular_inversion(a,m)
 	return 0
 end
 
-local function fermaTest(p) --тест ферма над числом 8 раз 
-	local count = 0
-	local i = Long(1)
-	repeat
-	  i = i + 1
-	  if i % p ~= 0 then
-		local res = i:pow(p - 1, p) == Long(1)
-		if res == false then return false,count end
-		  count = count + 1
-	  end
-	  dontLetTLWY()
-	until count > 8
-	return true
-end
-
-
-
-local function binToDec(bin) -- преобразование из двоичной системы в десятеричную
-  local dec = Long(0)
-	for i = 1, #bin do
-		dontLetTLWY()
-    local bit = tonumber(bin:sub(i,i))
-    local pos = #bin - i
-    if bit > 0 then
-			dec = dec + (longTwo^pos)*bit
-    end
-  end
-  return dec
-end
-
-local function RandomNum(L) -- рандомное нечетное число заданной длины
-  local bin = "1"
-  for i = 2, L-1 do -- создание двоичного представления числа
-    bin = bin .. (math.random() >= 0.5 and "1" or "0")
-  end
-  bin = bin .. "1"
-  return binToDec(bin) -- преобразование
-end
+-- local function fermaTest(p) --тест ферма над числом 8 раз 
+-- 	local count = 0
+-- 	local i = Long(1)
+-- 	repeat
+-- 	  i = i + 1
+-- 	  if i % p ~= 0 then
+-- 		local res = i:pow(p - 1, p) == Long(1)
+-- 		if res == false then return false,count end
+-- 		  count = count + 1
+-- 	  end
+-- 	  dontLetTLWY()
+-- 	until count > 8
+-- 	return true
+-- end
 
 local function Prime(L,debug) -- поиск простого числа среди множества чисел длиной L
   local prime
@@ -120,7 +96,7 @@ local function Prime(L,debug) -- поиск простого числа сред
   return prime
 end
 
-local function fastEncodeOrVerify(C,d,p,q,dp,dq,qinv)
+local function fastEncodeOrSign(C,d,p,q,dp,dq,qinv)
 	C = Long(C)
 	if not qinv then
 		dp = d%(p-1)
@@ -136,5 +112,5 @@ end
 return {
 	modular_inversion = modular_inversion,
 	generate_prime = Prime,
-	fast_EOV = fastEncodeOrVerify,
+	fast_EOS = fastEncodeOrSign,
 }

@@ -1,9 +1,9 @@
-local RSA_basic = require("RSA/RSAB")
+local RSA_basic = require("RSA/Basic")
 local Long = require("metaint")
 local TextSupport = require("RSA/text_support")
-local RSA_math = require("RSA/RSA_math")
-local fast_EOV
-fast_EOV = RSA_math.fast_EOV
+local RSA_math = require("RSA/Math")
+local fast_EOS
+fast_EOS = RSA_math.fast_EOS
 local serialization = require("serialization")
 local typeof = type
 local dontLetTLWY
@@ -39,7 +39,7 @@ do
     sign = function(self, number)
       if self.private_key[1] then
         if self.metadata then
-          return fast_EOV(number, self.private_key[1], self.metadata.P, self.metadata.Q, self.metadata.Dp, self.metadata.Dq, self.metadata.Qinv)
+          return fast_EOS(number, self.private_key[1], self.metadata.P, self.metadata.Q, self.metadata.Dp, self.metadata.Dq, self.metadata.Qinv)
         else
           return RSA_basic.decrypt(number, self.private_key[1], self.private_key[2])
         end
@@ -56,7 +56,7 @@ do
     decrypt = function(self, cryptNum)
       if self.private_key[1] then
         if self.metadata then
-          return fast_EOV(cryptNum, self.private_key[1], self.metadata.P, self.metadata.Q, self.metadata.Dp, self.metadata.Dq, self.metadata.Qinv)
+          return fast_EOS(cryptNum, self.private_key[1], self.metadata.P, self.metadata.Q, self.metadata.Dp, self.metadata.Dq, self.metadata.Qinv)
         else
           return RSA_basic.decrypt(cryptNum, self.private_key[1], self.private_key[2])
         end
@@ -90,7 +90,7 @@ do
       if self.metadata then
         for i = 1, #result do
           dontLetTLWY()
-          blocks[i] = fast_EOV(result[i], self.private_key[1], self.metadata.P, self.metadata.Q, self.metadata.Dp, self.metadata.Dq, self.metadata.Qinv)
+          blocks[i] = fast_EOS(result[i], self.private_key[1], self.metadata.P, self.metadata.Q, self.metadata.Dp, self.metadata.Dq, self.metadata.Qinv)
         end
       else
         for i = 1, #result do
@@ -110,7 +110,7 @@ do
       if self.metadata then
         for i = 1, #blocks do
           dontLetTLWY()
-          result[i] = fast_EOV(blocks[i], self.private_key[1], self.metadata.P, self.metadata.Q, self.metadata.Dp, self.metadata.Dq, self.metadata.Qinv)
+          result[i] = fast_EOS(blocks[i], self.private_key[1], self.metadata.P, self.metadata.Q, self.metadata.Dp, self.metadata.Dq, self.metadata.Qinv)
         end
       else
         for i = 1, #blocks do

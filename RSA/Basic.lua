@@ -3,7 +3,7 @@
 
 local RSA = {}
 local Long = require("metaint")
-local RSA_math = require("RSA/RSA_math")
+local RSA_math = require("RSA/Math")
 function dontLetTLWY()
   if os.sleep then
     return os.sleep(0)

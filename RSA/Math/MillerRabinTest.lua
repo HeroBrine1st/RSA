@@ -28,7 +28,7 @@ return function(n, k)
       for i = 1, s - 1 do
         dontLetTLWY()
         x = x:pow(2, n)
-        if x == 1 then
+        if x == longOne then
           return false, 1
         end
         if x == n - 1 then
