@@ -1,6 +1,6 @@
 local Long = require("metaint")
 local MillerRabinTest = require("RSA/Math/MillerRabinTest")
-local RandomNum = require("RSA/Math/RandomNum")
+--local RandomNum = require("RSA/Math/RandomNum")
 local function mulNum(op1,op2) -- костыль // применяем правила умножения для обработки целых чисел поверх натуральных
 	local inv1 = op1.inv
 	local inv2 = op2.inv
@@ -71,27 +71,18 @@ local function modular_inversion(a,m)
 	return 0
 end
 
--- local function fermaTest(p) --тест ферма над числом 8 раз 
--- 	local count = 0
--- 	local i = Long(1)
--- 	repeat
--- 	  i = i + 1
--- 	  if i % p ~= 0 then
--- 		local res = i:pow(p - 1, p) == Long(1)
--- 		if res == false then return false,count end
--- 		  count = count + 1
--- 	  end
--- 	  dontLetTLWY()
--- 	until count > 8
--- 	return true
--- end
-
 local function Prime(L,debug) -- поиск простого числа среди множества чисел длиной L
-  local prime
+	local prime
+	local min = longTwo^(L-1)
+	local max = longTwo^L
+	local av = max-min
   repeat
-    prime = RandomNum(L)
-		--local result,count = fermaTest(prime)
-		dontLetTLWY()
+		local temp = av*math.floor(math.random()*(10^14)) -- дроби не поддерживаются, так что используем такой вот костыль. Все= нам нужно целое число.
+		table.remove(av,1)
+		table.remove(av,1) --быстрое деление на 10^14
+		prime = min + temp
+		temp = nil
+		dontLetTLWY() -- Оказывается эта штука умеет в очистку мусора. Так что выше находится обнуление
     local result, chance = MillerRabinTest(prime,L)
     local accuracy = chance
     if result then accuracy = 1-accuracy end
