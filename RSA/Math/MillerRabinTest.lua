@@ -7,7 +7,8 @@ return function(n, k)
   if n < 2 or n % 2 == 0 then
     return false, 1
   end
-  local t = n - 1
+  local nSubOne = n - 1
+  local t = nSubOne
   local s = 0
   while t % 2 == 0 do
     t = t / 2
@@ -21,7 +22,7 @@ return function(n, k)
       table.remove(a, 1)
       table.remove(a, 1)
       local x = a:pow(t, n)
-      if x == longOne or x == n - 1 then
+      if x == longOne or x == nSubOne then
         _continue_0 = true
         break
       end
@@ -31,11 +32,11 @@ return function(n, k)
         if x == longOne then
           return false, 1
         end
-        if x == n - 1 then
+        if x == nSubOne then
           break
         end
       end
-      if x ~= n - 1 then
+      if x ~= nSubOne then
         return false, 1
       end
       _continue_0 = true

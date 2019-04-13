@@ -1,6 +1,7 @@
 local Long = require("metaint")
 
 local longTwo = Long(2)
+local cache = {} -- оптимизируем скорость создания рандомного числа засчет памяти. Не очень много должно занять
 
 local function binToDec(bin) -- преобразование из двоичной системы в десятеричную
     local dec = Long(0)
@@ -8,8 +9,15 @@ local function binToDec(bin) -- преобразование из двоично
         dontLetTLWY()
         local bit = tonumber(bin:sub(i,i))
         local pos = #bin - i
-        if bit > 0 then
-            dec = dec + (longTwo^pos)*bit
+        if bit == 1 then
+            local longTwoPowToPos
+            if not cache[pos] then
+                longTwoPowToPos = longTwo^pos
+                cache[pos] = tostring(longTwoPowToPos)
+            else
+                longTwoPowToPos = Long(cache[pos])
+            end
+            dec = dec + longTwoPowToPos
         end
     end
     return dec

@@ -6,7 +6,8 @@ longOne = Long(1)
         return true, 0
     if n < 2 or n % 2 == 0
         return false, 1
-    t = n - 1
+    nSubOne = n - 1
+    t = nSubOne
     s = 0
     while t%2 == 0
         t /= 2
@@ -19,15 +20,15 @@ longOne = Long(1)
         table.remove(a,1) -- division by 10^14
         -- a = RandomNum(k/2)
         x = a\pow(t,n)
-        if x == longOne or x == n - 1 then
+        if x == longOne or x == nSubOne then
             continue
         for i = 1, s-1
             dontLetTLWY()
             x = x\pow(2,n)
             if x == longOne
                 return false, 1
-            if x == n - 1
+            if x == nSubOne
                 break
-        if x ~= n - 1
+        if x ~= nSubOne
             return false, 1
     return true, 4^(-k)

@@ -90,8 +90,8 @@ local function Prime(L,debug) -- поиск простого числа сред
   local prime
   repeat
     prime = RandomNum(L)
-		--local result,count = fermaTest(prime)
-		dontLetTLWY()
+	--local result,count = fermaTest(prime)
+	dontLetTLWY()
     local result, chance = MillerRabinTest(prime,L)
     local accuracy = chance
     if result then accuracy = 1-accuracy end
