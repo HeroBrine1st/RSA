@@ -16,6 +16,17 @@ local function div2(num) --целочисленное деление метач�
   return num
 end
 
+local function shift(num, b) -- битовый сдвиг, не работает
+  local c=0
+  local d = 1 << b
+  for i=#num,1,-1 do
+    num[i],c = math.floor((c*base+num[i])/d), num[i]%d
+  end
+  while num[#num]==0 and #num>1 do num[#num]=nil end
+  return num
+end
+
+
 local function div( op1, op2 )
     if getmetatable(op2)~=m_table then op2=metaint(op2) end
     if op2[1]==0 and op2[2]==nil then error("Division by zero",2) end -- проверяем деление на ноль
@@ -43,34 +54,34 @@ end
 m_table={ --Метатаблица для работы с метачислами
   __index={ 
     tonumber=function(self)  --Преобразует метачисло в обычное число (возможна потеря точности)
-	  return tonumber(tostring(self))
-	end,
+  	  return tonumber(tostring(self))
+  	end,
 
-  pow=function(self,e,n)  --Возведение в степень e по модулю n
-    local a = metaint(self)
-    local p = metaint(e)
-    local res=metaint(1)
-    while (p[2] or p[1]~=0) do  -- p!=0
-      if p[1]%2==1 then
-        res=(res*a)%n
-        p[1]=p[1]-1  -- быстрое вычитание единицы
-      else
-        a=(a*a)%n
-        div2(p)
+    pow=function(self,e,n)  --Возведение в степень e по модулю n
+      local a = metaint(self)
+      local p = metaint(e)
+      local res=metaint(1)
+      while (p[2] or p[1]~=0) do  -- p!=0
+        if p[1]%2==1 then
+          res=(res*a)%n
+          p[1]=p[1]-1  -- быстрое вычитание единицы
+        else
+          a=(a*a)%n
+          div2(p)
+        end
       end
-    end
-    return res
-  end,
+      return res
+    end,
 
-  sqrt=function(self)  -- извлечение квадратного корня (целочисленное)
-    local n0
-    local n1 = div2(self+1)
-    repeat
-      n0=n1
-      n1=div2(n0+self/n0)
-    until n1>=n0
-    return n0
-  end
+    sqrt=function(self)  -- извлечение квадратного корня (целочисленное)
+      local n0
+      local n1 = div2(self+1)
+      repeat
+        n0=n1
+        n1=div2(n0+self/n0)
+      until n1>=n0
+      return n0
+    end
   },
 
   __tostring=function(self)  --Преобразует метачисло в строку
