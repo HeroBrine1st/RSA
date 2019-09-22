@@ -63,28 +63,13 @@ end
 local function modular_inversion(a,m)
 	local x,y,d = extendedEuclideanAlgorithm(a,m)
 	if d == longOne then
-		local m2 = Long(m)
-		m2.inv = true
-		return subNum(x,m2)%m
+		if x.inv then
+			return addNum(x, m)
+		end
+		return x
 	end
-	--print("D",x,y,d)
 	return 0
 end
-
--- local function fermaTest(p) --тест ферма над числом 8 раз 
--- 	local count = 0
--- 	local i = Long(1)
--- 	repeat
--- 	  i = i + 1
--- 	  if i % p ~= 0 then
--- 		local res = i:pow(p - 1, p) == Long(1)
--- 		if res == false then return false,count end
--- 		  count = count + 1
--- 	  end
--- 	  dontLetTLWY()
--- 	until count > 8
--- 	return true
--- end
 
 local function Prime(L,debug) -- поиск простого числа среди множества чисел длиной L
   local prime
